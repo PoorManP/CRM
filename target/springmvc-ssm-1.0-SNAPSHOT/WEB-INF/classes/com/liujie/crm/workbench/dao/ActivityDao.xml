@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liujie.crm.workbench.dao.ActivityDao">
+    <select id="getUserNames" resultType="com.liujie.crm.settings.domain.User">
+        select * from tbl_user;
+    </select>
+
+    <insert id="saveActivityInfo">
+        insert into tbl_activity(
+        id,
+        owner,
+        name,
+        startDate,
+        endDate,
+        cost,
+        description,
+        createTime,
+        createBy)values(
+        #{id},
+        #{owner},
+        #{name},
+        #{startDate},
+        #{endDate},
+        #{cost},
+        #{description},
+        #{createTime},
+        #{createBy}
+        )
+    </insert>
+
+    <select id="getListByCondition" resultType="com.liujie.crm.workbench.domain.Activity">
+        select a.id,
+        a.name,
+        u.name as owner,
+        a.startDate,
+        a.endDate
+        from tbl_activity a join
+        tbl_user u on a.owner = u.id
+
+        <where>
+            <if test="name!=null and name !=''">
+                a.name like '%' #{name} '%'
+            </if>
+
+
+            <if test="owner!=null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+
+            <if test="startDate!=null and startDate !=''">
+                and a.startDate &gt;#{startDate}gt; #{startDate}
+            </if>
+
+            <if test="endDate!=null and endDate !=''">
+                and a.endDate &lt;#{endDate}gt; #{startDate}
+            </if>
+
+        </where>
+
+        order by a.createTime desc
+
+        limit #{skipCount},#{pageSize}
+    </select>
+
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*)
+        from tbl_activity a join
+        tbl_user u on a.owner = u.id
+
+        <where>
+            <if test="name!=null and name !=''">
+                a.name like '%' #{name} '%'
+            </if>
+
+
+            <if test="owner!=null and owner !=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+
+            <if test="startDate!=null and startDate !=''">
+                and a.startDate &gt;#{startDate}gt; #{startDate}
+            </if>
+
+            <if test="endDate!=null and endDate !=''">
+                and a.endDate &lt;#{endDate}gt; #{startDate}
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="delete">
+        delete from tbl_activity where id = #{id}
+    </delete>
+
+    <select id="dataById" resultType="com.liujie.crm.workbench.domain.Activity">
+            select * from tbl_activity where id=#{id};
+    </select>
+
+    <update id="updateActivity">
+        update tbl_activity set owner = #{owner},
+        name=#{name},
+        startDate = #{startDate},
+        endDate=#{endDate},
+        cost=#{cost},
+        description = #{description} where id=#{id}
+    </update>
+
+    <select id="detailByid" resultType="com.liujie.crm.workbench.domain.Activity">
+        select
+        a.id,
+        u.name as owner,
+        a.name,
+        a.startDate,
+        a.endDate,
+        a.cost,
+        a.description,
+        a.createTime,
+        a.createBy,
+        a.editTime,
+        a.editBy
+
+        from tbl_activity a join tbl_user u
+        on a.owner = u.id
+        where a.id = #{id}
+    </select>
+
+    <select id="showActiviList" resultType="com.liujie.crm.workbench.domain.Activity">
+        select
+        car.id as id,
+        a.name,
+        a.startDate,
+        a.endDate,
+        u.name as owner
+        from tbl_activity a join tbl_user u
+        on a.owner = u.id join tbl_clue_activity_relation car
+        on a.id = car.activityId
+
+        where car.clueId=#{clueId};
+    </select>
+
+    <delete id="delBund">
+        delete from tbl_clue_activity_relation where id = #{id}
+    </delete>
+
+    <select id="activity" resultType="com.liujie.crm.workbench.domain.Activity">
+        select
+        a.id as id,
+        a.name,
+        a.startDate,
+        a.endDate,
+        u.name as owner
+        from tbl_activity a join tbl_user u on a.owner=u.id join tbl_clue_activity_relation car
+        on a.id = car.activityId
+        <where>
+            <if test="condition!=null and condition !=''">
+                a.name like '%' #{condition} '%'
+            </if>
+            <if test="clueId!=null and clueId != ''">
+                and car.clueId != #{clueId}
+            </if>
+        </where>
+    </select>
+    <select id="activityByName" resultType="com.liujie.crm.workbench.domain.Activity">
+
+        select a.id,a.name,u.name as owner,a.startDate,a.endDate from tbl_activity a join tbl_user u on a.owner = u.id
+
+        <where>
+            <if test="aname !=null and aname !=''">
+                a.name like '%' #{aname} '%'
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.liujie.crm.workbench.dao.CustomerDao">
+
+    <insert id="save">
+        insert into tbl_customer(
+                id,
+                owner,
+                name,
+                website,
+                phone,
+                createBy,
+                createTime,
+                contactSummary,
+                nextContactTime,
+                description,
+                address
+                ) values(
+                #{id},
+                #{owner},
+                #{name},
+                #{website},
+                #{phone},
+                #{createBy},
+                #{createTime},
+                #{contactSummary},
+                #{nextContactTime},
+                #{description},
+                #{address}
+                )
+    </insert>
+
+    <update id="edit">
+        update tbl_customer set
+                id =#{id},
+                owner=#{owner}
+                name=#{name}
+                website=#{website}
+                phone=#{phone}
+                createBy=#{createBy}
+                createTime=#{createTime}
+                contactSummary=#{contactSummary}
+                nextContactTime=#{nextContactTime}
+                description=#{description}
+                address=#{address}
+
+                where id = #{id}
+    </update>
+    <select id="getCustomerByName" resultType="com.liujie.crm.workbench.domain.Customer">
+        select * from tbl_customer where name = #{company};
+    </select>
+
+
+    <!--    -->
+    <!--   查询条数
+    -->
+
+    <select id="queryTotal" resultType="int">
+        /* private String name;
+
+        private String owner;
+
+        private String phone;
+
+        private String website;
+
+        private Integer pageNo;
+
+        private Integer pageSize;*/
+        select count(*) from tbl_customer
+        <where>
+            <if test="name !='' and name !=null">
+                name like '%' #{name} '%'
+            </if>
+
+            <if test="owner !='' and owner != null">
+                and owner like '%' #{owner} '%'
+            </if>
+            <if test="website !='' and website != null">
+                and website like '%' #{website} '%'
+            </if>
+            <if test="phone !='' and phone != null">
+                and phone like '%' #{phone} '%'
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryByCondition" resultType="com.liujie.crm.workbench.domain.Customer">
+        select * from tbl_customer
+        <where>
+            <if test="name !='' and name !=null">
+                name like '%' #{name} '%'
+            </if>
+
+            <if test="owner !='' and owner != null">
+                and owner like '%' #{owner} '%'
+            </if>
+            <if test="website !='' and website != null">
+                and website like '%' #{website} '%'
+            </if>
+            <if test="phone !='' and phone != null">
+                and phone like '%' #{phone} '%'
+            </if>
+        </where>
+
+        order by createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--    组件扫描器-->
+<!--    <context:component-scan base-package="com.liujie.controller"/>
+
+    <context:component-scan base-package="com.liujie.handler"/>-->
+    <!--    视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/workbench/clue/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+<!--    注解驱动  ajax请求 静态资源文件  ResponseBody-->
+    <tx:annotation-driven/>
+
+    <tx:default-servlet-handler/>
+
+<!--    <tx:resources mapping="/html/**" location="/html/"/>-->
+<!--    <tx:resources mapping="/js/**" location="/js/"/>-->
+
+    <tx:resources mapping="/jquery/**" location="/jquery/"/>
+
+
+    <context:component-scan base-package="com.liujie.crm.settings.web.controller"/>
+    <context:component-scan base-package="com.liujie.crm.exception"/>
+    <context:component-scan base-package="com.liujie.crm.handller"/>
+
+<!--    拦截器的注册-->
+    <tx:interceptors>
+        <tx:interceptor>
+            <tx:mapping path="/**.do"/>
+            <tx:mapping path="/**.jsp"/>
+            <bean class="com.liujie.crm.handller.Interceptor"/>
+        </tx:interceptor>
+    </tx:interceptors>
+
+    <context:component-scan base-package="com.liujie.crm.handller"/>
+
+    <context:component-scan base-package="com.liujie.crm.workbench.web.controller"/>
+</beans>
