@@ -44,10 +44,4 @@ public class TranCtroller {
         return list;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/1")
-    public void Test() {
-
-    }
-
 }
