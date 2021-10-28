@@ -11,7 +11,7 @@
 <!--    <mappers>-->
 <!--        <package name="com.liujie.dao"/>-->
 <!--    </mappers>-->
-
+<!--update-->
     <mappers>
         <package name="com.liujie.crm.settings.dao"/>
         <package name="com.liujie.crm.workbench.dao"/>
