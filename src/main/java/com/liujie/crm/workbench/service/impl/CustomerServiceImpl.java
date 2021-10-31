@@ -58,4 +58,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         return map;
     }
+
+    @Override
+    public List<String> getCustomerNames(String name) {
+        List<String> list = customerDao.getCustomerNames(name);
+
+        return list;
+    }
 }

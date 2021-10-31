@@ -34,7 +34,6 @@
         <tx:interceptor>
             <tx:mapping path="/**.do"/>
             <tx:mapping path="/**.jsp"/>
-
             <bean class="com.liujie.crm.handller.Interceptor"/>
         </tx:interceptor>
     </tx:interceptors>

@@ -16,4 +16,6 @@ public interface CustomerDao {
     List<Customer> queryByCondition(CustomerCondition condition);
 
     int edit(Customer customer);
+
+    List<String> getCustomerNames(String name);
 }
