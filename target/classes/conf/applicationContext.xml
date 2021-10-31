@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--    spring配置文件-->
+
+
+
+    <context:property-placeholder location="classpath:conf/propertis.properties"/>
+    <!--    声明数据源外国连接数据库-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.user}"/>
+        <property name="username" value="${jdbc.name}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--    创建mybatis的SqlSeesionFactoryBean 映射dao.class完成查询-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:conf/mybatis.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.liujie.crm.settings.dao com.liujie.crm.workbench.dao"/>
+        <!--        创建在这个包下的所有接口的实现类-->
+    </bean>
+
+    <!--    <bean id="stuService" class="com.liujie.service.StuServiceImpl">
+            <property name="dao" ref="stuDao"/>
+        </bean>-->
+    <!--&lt;!&ndash;    service注解的扫描器对象&ndash;&gt;-->
+    <!--        <context:component-scan base-package="com.liujie.service"/>-->
+<!--    <context:component-scan base-package="com.liujie.crm"/>-->
+
+    <!--    注解驱动 -->
+    <context:component-scan base-package="com.liujie.crm.settings.dao"/>
+
+    <context:component-scan base-package="com.liujie.crm.workbench.web"/>
+    <context:component-scan base-package="com.liujie.crm.settings.service"/>
+    <context:component-scan base-package="com.liujie.crm.settings.web.controller"/>
+    <context:component-scan base-package="com.liujie.crm.workbench.service"/>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--    声明式事务管理  和源代码完全分离-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:advice id="myAdvie" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="login*" isolation="DEFAULT" propagation="REQUIRED"/>
+
+            <tx:method name="get*" isolation="DEFAULT" propagation="REQUIRED"/>
+        </tx:attributes>
+
+
+    </tx:advice>
+
+
+    <aop:config>
+        <aop:pointcut id="logi" expression="execution(* *..service..*.*(..))"/>
+        <aop:advisor advice-ref="myAdvie" pointcut-ref="logi"/>
+    </aop:config>
+
+    <aop:config>
+        <aop:pointcut id="get" expression="execution(* *..workbench..*.*(..))"/>
+        <aop:advisor advice-ref="myAdvie" pointcut-ref="get"/>
+
+    </aop:config>
+</beans>
+
