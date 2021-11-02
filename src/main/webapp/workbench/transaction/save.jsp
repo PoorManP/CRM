@@ -1,9 +1,17 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 String basePath = request.getScheme() + "://" +
 request.getServerName() + ":" + request.getServerPort() +
 request.getContextPath() + "/";
+
+	Map<String,String> map = (Map<String,String>)application.getAttribute("stagePossibility");
+
+
+	Set<String> strings = map.keySet();
+
 %>
 <!DOCTYPE html>
 <html>
@@ -22,8 +30,19 @@ request.getContextPath() + "/";
 </head>
 <script type="text/javascript">
 
+
 	$(function() {
 
+		var json = {
+			<%
+            for (String key:strings){
+                String value = map.get(key);
+                %>
+			"<%=key%>":<%=value%>,
+			<%
+            }
+            %>
+		}
 
 		$("#create-customerName").typeahead({
 			source: function (query, process) {
@@ -163,6 +182,14 @@ request.getContextPath() + "/";
 
 			$("#findContacts").modal("hide");
 		})
+
+		$("#create-stage").change(function () {
+			var value = this.value;
+
+			alert(json[value])
+			$("#create-possibility").val(json[value]);
+
+		})
 	});
 
 </script>
@@ -296,7 +323,7 @@ request.getContextPath() + "/";
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
+			  <select class="form-control" id="create-stage">
 				  <c:forEach items="${stage}" var="s">
 					  <option value="${s.value}">${s.text}</option>
 				  </c:forEach>

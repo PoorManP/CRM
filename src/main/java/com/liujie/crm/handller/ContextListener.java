@@ -41,6 +41,19 @@ public class ContextListener implements ServletContextListener {
 
             System.out.println(set.getKey()+set.getValue());
         }
+
+        Map<String, String> map2 = new HashMap<>();
+        ResourceBundle bundle = ResourceBundle.getBundle("conf/stage2possibility");
+        Enumeration<String> keys = bundle.getKeys();
+
+        while (keys.hasMoreElements()){
+            String key = keys.nextElement();
+            String value = bundle.getString(key);
+            map2.put(key,value);
+        }
+
+        application.setAttribute("stagePossibility", map2);
+
     }
 
     @Override
