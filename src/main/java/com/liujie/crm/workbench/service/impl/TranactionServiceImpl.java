@@ -102,4 +102,18 @@ public class TranactionServiceImpl implements TranactionService {
 
         return flag;
     }
+
+    @Override
+    public Tran queryById(String id) {
+        Tran tran = dao.queryById(id);
+
+        return tran;
+    }
+
+    @Override
+    public List<TranHistory> queryHistoryById(String tranId) {
+        List<TranHistory> list = historyDao.queryById(tranId);
+
+        return list;
+    }
 }

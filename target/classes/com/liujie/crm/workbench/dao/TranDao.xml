@@ -44,6 +44,10 @@
             #{nextContactTime}
         );
     </insert>
+
+    <select id="queryById" resultType="com.liujie.crm.workbench.domain.Tran">
+        select * from tbl_tran where id = #{id};
+    </select>
 </mapper>
 
 
