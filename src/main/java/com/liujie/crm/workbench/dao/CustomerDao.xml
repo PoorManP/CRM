@@ -115,6 +115,10 @@
     <select id="getCustomerNames" resultType="String">
         select name from tbl_customer where name like '%' #{name} '%';
     </select>
+
+    <select id="queryByName" resultType="com.liujie.crm.workbench.domain.Customer">
+        select * from tbl_customer where name=#{customerId}
+    </select>
 </mapper>
 
 

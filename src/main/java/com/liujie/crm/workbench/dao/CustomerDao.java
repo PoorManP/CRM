@@ -18,4 +18,6 @@ public interface CustomerDao {
     int edit(Customer customer);
 
     List<String> getCustomerNames(String name);
+
+    Customer queryByName(String customerId);
 }
