@@ -48,6 +48,11 @@
     <select id="queryById" resultType="com.liujie.crm.workbench.domain.Tran">
         select * from tbl_tran where id = #{id};
     </select>
+
+    <update id="changStage">
+        update tbl_tran set stage=#{stage},editBy=#{editBy},editTime=#{editTime}
+        where id = #{id}
+    </update>
 </mapper>
 
 

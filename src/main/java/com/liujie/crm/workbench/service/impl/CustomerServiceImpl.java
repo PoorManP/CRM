@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Service
@@ -54,6 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
             map.put("success", true);
         } else {
             map.put("success", false);
+
         }
 
         return map;

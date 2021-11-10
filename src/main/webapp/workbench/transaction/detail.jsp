@@ -133,7 +133,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 					html+='<td>'+n.money+'</td>'
 					html+='<td>'+n.possibility+'</td>'
 					html+='<td>'+n.expectedDate+'</td>'
-					html+='<td>'+n.createDate+'</td>'
+					html+='<td>'+n.createTime+'</td>'
 					html+='<td>'+n.createBy+'</td>'
 					html+='</tr>'
 				})
@@ -146,8 +146,106 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 
 	function changeStage(listValue,i) {
 
+		if(confirm("确定改变阶段吗?")){
+			$.ajax({
+				url:"tran/changeStage.do",
+				type:"post",
+				data:{
+					"id":'${tran.id}',
+					"stage":listValue,
+					"money":'${tran.money}',
+					"expectedDate":'${tran.expectedDate}'
+				},
+				dataType:"json",
+				success:function (data) {
+					/*
+                    * data["success":[true/false],tran:[]]
+                    * */
+
+					if(data.success){
+						//
+						$("#stage").html(data.tran.stage)
+						$("#possibility").html(data.tran.possibility)
+						$("#editBy").html(data.tran.editBy)
+						$("#editTime").html(data.tran.editTime)
+
+						changeIcon(listValue,i);
+
+						showHistoryTran();
+					//	刷新hsitory
+					}else{
+						alert("修性失败")
+					}
+				}
+			})
+		}
+
     }
 
+    function changeIcon(listValue,i1) {
+	//	当前阶段
+		var currentStage = listValue;
+		var currPossibility = $("#possibility").html();
+		var index = i1;
+		var point = <%=point%>;
+
+		// 如果当前阶段为0  前七个为黑圈   当前为0 可能性的为红叉  一个为黑叉
+	 	if("0" == currPossibility){
+			for(var i = 0;i<point;i++){
+			//	前七个一定为黑圈
+				$("#"+i).removeClass();
+				$("#"+i).addClass("glyphicon glyphicon-record mystage")
+				$("#"+i).css("color","#000000")
+			}
+
+			for(var i = point;i< <%=dicValueList.size()%>;i++){
+				if(i==index){
+
+					$("#"+i).removeClass();
+					$("#"+i).addClass("glyphicon glyphicon-remove mystage")
+					$("#"+i).css("color","#ff0000")
+				//	为当前阶段
+				}else{
+				//	黑叉
+					$("#"+i).removeClass();
+					$("#"+i).addClass("glyphicon glyphicon-remove mystage")
+					$("#"+i).css("color","#000000")
+				}
+			}
+
+		//	不为0
+		//
+		}else {
+			for(var i = 0;i<point;i++){
+				//
+				if(i==index){
+
+					$("#"+i).removeClass();
+					$("#"+i).addClass("glyphicon glyphicon-map-marker mystage")
+					$("#"+i).css("color","#90f790")
+				//	绿标
+				}else if(i<index){
+				//	绿圈
+
+					$("#"+i).removeClass();
+					$("#"+i).addClass("glyphicon glyphicon-record mystage")
+					$("#"+i).css("color","#90f790")
+				}else {
+				//	黑圈
+					$("#"+i).removeClass();
+					$("#"+i).addClass("glyphicon glyphicon-record mystage")
+					$("#"+i).css("color","#000000")
+				}
+			}
+
+			for(var i = point;i< <%=dicValueList.size()%>;i++){
+			//	黑叉
+				$("#"+i).removeClass();
+				$("#"+i).addClass("glyphicon glyphicon-remove mystage")
+				$("#"+i).css("color","#000000")
+			}
+		}
+	}
 
 </script>
 
@@ -199,7 +297,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 		%>
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-remove mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #ff0000;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #ff0000;"></span>-----------
 		<%
 		}else{
 //                            黑叉
@@ -207,7 +305,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 		%>
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-remove mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #000000;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #000000;"></span>-----------
 		<%
 			}
 
@@ -219,7 +317,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 		%>
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-record mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #000000;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #000000;"></span>-----------
 		<%
 
 				}
@@ -253,7 +351,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-remove mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #000000;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #000000;"></span>-----------
 		<%
 		}else {
 //                        否则话
@@ -263,7 +361,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 		%>
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-map-marker mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #90F790;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #90F790;"></span>-----------
 		<%
 			//
 		}else if(index > i){
@@ -272,7 +370,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-ok-circle mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #90F790;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #90F790;"></span>-----------
 		<%
 			//                            已完成标
 		}else {
@@ -280,7 +378,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 		%>
 		<span id='<%=i%>' onclick="changeStage('<%=listValue.getValue()%>','<%=i%>')" class="glyphicon glyphicon-record mystage"
 			  data-toggle="popover" data-placement="bottom"
-			  data-content="资质审查" style="color: #000000;"></span>-----------
+			  data-content="<%=listValue.getValue()%>" style="color: #000000;"></span>-----------
 		<%
 						}
 					}
@@ -318,7 +416,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 			<div style="width: 300px; color: gray;">所有者</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${tran.owner}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">金额</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${money}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${tran.money}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -334,7 +432,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 			<div style="width: 300px; color: gray;">客户名称</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${tran.customerId}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">阶段</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${tran.stage}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b id="stage">${tran.stage}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -342,7 +440,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 			<div style="width: 300px; color: gray;">类型</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${tran.type}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">可能性</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${possibility}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b id="possibility">${possibility}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -366,7 +464,7 @@ Map<String,String> pMap = (Map<String, String>) application.getAttribute("stageP
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 70px;">
 			<div style="width: 300px; color: gray;">修改者</div>
-			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b>${tran.editBy}&nbsp;&nbsp;</b><small style="font-size: 10px; color: gray;">${tran.editTime}</small></div>
+			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b id="editBy">${tran.editBy}&nbsp;&nbsp;</b><small id="editTime" style="font-size: 10px; color: gray;">${tran.editTime}</small></div>
 			<div style="height: 1px; width: 550px; background: #D5D5D5; position: relative; top: -20px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 80px;">

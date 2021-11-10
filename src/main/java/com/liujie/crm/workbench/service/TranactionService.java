@@ -17,4 +17,6 @@ public interface TranactionService {
     Tran queryById(String id);
 
     List<TranHistory> queryHistoryById(String tranId);
+
+    boolean changeStage(Tran tran);
 }

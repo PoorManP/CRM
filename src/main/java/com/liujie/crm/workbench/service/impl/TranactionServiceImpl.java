@@ -116,4 +116,36 @@ public class TranactionServiceImpl implements TranactionService {
 
         return list;
     }
+
+
+    @Override
+    public boolean changeStage(Tran tran) {
+        boolean flag = true;
+
+//        改变交易阶段
+
+        int count = dao.changStage(tran);
+        if(count!=1){
+            flag = false;
+        }
+
+//        生成交易历史
+
+        TranHistory tranHistory = new TranHistory();
+        tranHistory.setId(UUIDUtil.getUUID());
+        tranHistory.setTranId(tran.getId());
+        tranHistory.setCreateBy(tran.getEditBy());
+        tranHistory.setExpectedDate(tran.getExpectedDate());
+        tranHistory.setCreateTime(tran.getEditTime());
+
+        tranHistory.setStage(tran.getStage());
+
+        tranHistory.setMoney(tran.getMoney());
+
+        int save = historyDao.save(tranHistory);
+        if(save != 1){
+            flag = false;
+        }
+        return flag;
+    }
 }

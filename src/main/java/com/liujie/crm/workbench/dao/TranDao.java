@@ -7,4 +7,6 @@ public interface TranDao {
     int save(Tran t);
 
     Tran queryById(String id);
+
+    int changStage(Tran tran);
 }

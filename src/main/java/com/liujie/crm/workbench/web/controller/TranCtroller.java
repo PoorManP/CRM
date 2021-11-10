@@ -26,6 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.*;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,6 +128,27 @@ public class TranCtroller {
         }
 
         return list;
+    }
+
+    @RequestMapping(value = "/changeStage.do")
+    @ResponseBody
+    public Map changeStage(Tran tran,HttpServletRequest request){
+
+        User user = (User) request.getSession().getAttribute("user");
+        Map<String, String> pMap = (Map<String, String>) request.getSession().getServletContext().getAttribute("stagePossibility");
+
+        tran.setEditBy(user.getName());
+        tran.setEditTime(DateTimeUtil.getSysTime());
+        tran.setPossibility(pMap.get(tran.getStage()));
+
+        boolean flag = tranactionService.changeStage(tran);
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("success", flag);
+        map.put("tran", tran);
+
+        return map;
     }
 
 
