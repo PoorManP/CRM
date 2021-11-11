@@ -5,6 +5,7 @@ import com.liujie.crm.settings.domain.User;
 import com.liujie.crm.settings.service.UserService;
 import com.liujie.crm.utils.DateTimeUtil;
 import com.liujie.crm.utils.UUIDUtil;
+import com.liujie.crm.vo.PaginationVo;
 import com.liujie.crm.workbench.domain.Activity;
 import com.liujie.crm.workbench.domain.Contacts;
 import com.liujie.crm.workbench.domain.Tran;
@@ -147,6 +148,15 @@ public class TranCtroller {
 
         map.put("success", flag);
         map.put("tran", tran);
+
+        return map;
+    }
+
+    @RequestMapping(value = "/getChars.do")
+    @ResponseBody
+    public Map<String,Object> getChars(){
+
+        Map<String,Object> map = tranactionService.getChars();
 
         return map;
     }

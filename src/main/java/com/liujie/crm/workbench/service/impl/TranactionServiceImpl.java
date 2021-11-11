@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TranactionServiceImpl implements TranactionService {
@@ -147,5 +149,29 @@ public class TranactionServiceImpl implements TranactionService {
             flag = false;
         }
         return flag;
+    }
+
+    @Override
+    public Map<String, Object> getChars() {
+
+        Map<String, Object> map = new HashMap<>();
+
+
+
+//        total
+        int total = dao.getTotal();
+
+        map.put("total", total);
+
+
+//        stage
+
+        List<Map<String, Object>> dataList = dao.getChars();
+        map.put("dataList", dataList);
+
+
+        return map;
+
+
     }
 }

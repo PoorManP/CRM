@@ -6,6 +6,7 @@ import com.liujie.crm.workbench.domain.Tran;
 import com.liujie.crm.workbench.domain.TranHistory;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TranactionService {
     List<User> getUserNames();
@@ -19,4 +20,6 @@ public interface TranactionService {
     List<TranHistory> queryHistoryById(String tranId);
 
     boolean changeStage(Tran tran);
+
+    Map<String, Object> getChars();
 }
